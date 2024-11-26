@@ -1,0 +1,4 @@
+---
+# Save this file as "session.yaml"
+# It should only contain your adventofcode.com Session string. This is needed if you want to download puzzle input automatically
+session: <your-token-here>

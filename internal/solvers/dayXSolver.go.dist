@@ -1,0 +1,22 @@
+package solvers
+
+import (
+	"fmt"
+	"internal/utility"
+)
+
+type DayXSolver struct {}
+
+func (s DayXSolver) Part1() string {
+
+	input := utility.LoadInput(X)
+	for _, line := range input {
+		fmt.Println(line)
+	}
+
+	return "todo: implement Part1"
+}
+
+func (s DayXSolver) Part2() string {
+	return "todo: implement Part2"
+}
