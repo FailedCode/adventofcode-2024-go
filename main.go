@@ -18,7 +18,9 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	fmt.Println(fmt.Sprintf("Day %v, Part 1:", day))
 	fmt.Println(solver.Part1())
+	fmt.Println(fmt.Sprintf("Day %v, Part 2:", day))
 	fmt.Println(solver.Part2())
 }
 
