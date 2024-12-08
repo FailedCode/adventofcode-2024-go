@@ -17,9 +17,9 @@ func (s DayXSolver) Part1() string {
 		fmt.Println(line)
 	}
 
-	return "todo: implement Part1"
+	return fmt.Sprintf("todo: implement Part1")
 }
 
 func (s DayXSolver) Part2() string {
-	return "todo: implement Part2"
+	return fmt.Sprintf("todo: implement Part2")
 }
