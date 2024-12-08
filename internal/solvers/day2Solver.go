@@ -7,11 +7,14 @@ import (
 	"internal/utility"
 )
 
-type Day2Solver struct {}
+type Day2Solver struct {
+	Day uint
+	InputSource string
+}
 
 func (s Day2Solver) Part1() string {
 
-	input := utility.LoadInput(2)
+	input := utility.LoadInput(s.Day, s.InputSource)
 
 	safeReports := 0
 	for _, line := range input {
@@ -30,7 +33,7 @@ func (s Day2Solver) Part1() string {
 
 func (s Day2Solver) Part2() string {
 
-	input := utility.LoadInput(2)
+	input := utility.LoadInput(s.Day, s.InputSource)
 
 	safeReports := 0
 	for _, line := range input {

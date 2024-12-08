@@ -8,11 +8,14 @@ import (
 	"slices"
 )
 
-type Day1Solver struct {}
+type Day1Solver struct {
+	Day uint
+	InputSource string
+}
 
 func (s Day1Solver) Part1() string {
 
-	input := utility.LoadInput(1)
+	input := utility.LoadInput(s.Day, s.InputSource)
 	leftNumbers := []int{}
 	rightNumbers := []int{}
 	// raw string, so slashes do not need to be escaped
@@ -42,7 +45,7 @@ func (s Day1Solver) Part1() string {
 
 func (s Day1Solver) Part2() string {
 
-	input := utility.LoadInput(1)
+	input := utility.LoadInput(s.Day, s.InputSource)
 	leftNumbers := []int{}
 	rightNumbers := []int{}
 	r := regexp.MustCompile(`(\d+)\s+(\d+)`)

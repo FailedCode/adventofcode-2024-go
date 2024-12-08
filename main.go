@@ -9,8 +9,9 @@ import (
 	"internal/solvers"
 )
 
-var day int
-var part int
+var day uint
+var part uint
+var inputSource string
 
 func main() {
 	parseArguments()
@@ -19,6 +20,7 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+
 	if part == 0 || part == 1 {
 		fmt.Println(fmt.Sprintf("Day %v, Part 1:", day))
 		fmt.Println(solver.Part1())
@@ -30,28 +32,33 @@ func main() {
 }
 
 func parseArguments() {
-	flag.IntVar(&day, "day", 0, "Explicitly set the day to be solved")
-	flag.IntVar(&part, "part", 0, "defaults to 0 (both)")
+	flag.UintVar(&day, "day", 0, "Explicitly set the day to be solved")
+	flag.UintVar(&part, "part", 0, "defaults to 0 (both)")
+	flag.StringVar(&inputSource, "source", "day", "selects what input file prefix to load, defaults to \"day\"")
 	flag.Parse()
 
 	if day < 1 {
 		// Use the current day of the month if none is specified.
 		// Works great during december
-		date := time.Now()
-		day = date.Day()
+		day = uint(time.Now().Day())
 	}
 }
 
 func getSolverByName(name string) (solvers.DaySolver, error) {
 	// Compiled languages like go have no other options than
 	// explicitly listing all Types that may be used, it seems
-	var solvers = map[string]solvers.DaySolver {
-		"Day1Solver": solvers.Day1Solver{},
-		"Day2Solver": solvers.Day2Solver{},
+	var solver solvers.DaySolver = nil
+	if name == "Day1Solver" {
+		solver = &solvers.Day1Solver{Day: day, InputSource: inputSource}
 	}
-	solver := solvers[name]
+	if name == "Day2Solver" {
+		solver = &solvers.Day2Solver{Day: day, InputSource: inputSource}
+	}
+	if name == "Day3Solver" {
+		solver = &solvers.Day3Solver{Day: day, InputSource: inputSource}
+	}
 	if solver == nil {
 		return nil, errors.New("Unknown Solver")
 	}
-	return solvers[name], nil
+	return solver, nil
 }

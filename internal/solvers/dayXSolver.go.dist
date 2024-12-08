@@ -5,11 +5,14 @@ import (
 	"internal/utility"
 )
 
-type DayXSolver struct {}
+type DayXSolver struct {
+	Day uint
+	InputSource string
+}
 
 func (s DayXSolver) Part1() string {
 
-	input := utility.LoadInput(X)
+	input := utility.LoadInput(s.Day, s.InputSource)
 	for _, line := range input {
 		fmt.Println(line)
 	}
