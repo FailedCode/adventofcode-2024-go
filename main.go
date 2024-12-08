@@ -41,6 +41,7 @@ func getSolverByName(name string) (solvers.DaySolver, error) {
 	// explicitly listing all Types that may be used, it seems
 	var solvers = map[string]solvers.DaySolver {
 		"Day1Solver": solvers.Day1Solver{},
+		"Day2Solver": solvers.Day2Solver{},
 	}
 	solver := solvers[name]
 	if solver == nil {
