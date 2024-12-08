@@ -10,6 +10,7 @@ import (
 )
 
 var day int
+var part int
 
 func main() {
 	parseArguments()
@@ -18,14 +19,19 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	fmt.Println(fmt.Sprintf("Day %v, Part 1:", day))
-	fmt.Println(solver.Part1())
-	fmt.Println(fmt.Sprintf("Day %v, Part 2:", day))
-	fmt.Println(solver.Part2())
+	if part == 0 || part == 1 {
+		fmt.Println(fmt.Sprintf("Day %v, Part 1:", day))
+		fmt.Println(solver.Part1())
+	}
+	if part == 0 || part == 2 {
+		fmt.Println(fmt.Sprintf("Day %v, Part 2:", day))
+		fmt.Println(solver.Part2())
+	}
 }
 
 func parseArguments() {
 	flag.IntVar(&day, "day", 0, "Explicitly set the day to be solved")
+	flag.IntVar(&part, "part", 0, "defaults to 0 (both)")
 	flag.Parse()
 
 	if day < 1 {

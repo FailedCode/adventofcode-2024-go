@@ -7,6 +7,7 @@ Solutions in [GO](https://go.dev/learn/)
 
 * Run the current day: `go run .`
 * Run a specific day: `go run . --day=<day>` e.g. `go run . --day=6`
+* Run a specific part: `go run . --part=<1,2>` e.g. `go run . --day=2 --part=2`
 
 ## GO learnings
 
