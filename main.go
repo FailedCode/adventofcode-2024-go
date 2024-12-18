@@ -60,6 +60,9 @@ func getSolverByName(name string) (solvers.DaySolver, error) {
 	if name == "Day9Solver" {
 		solver = &solvers.Day9Solver{Day: day, InputSource: inputSource}
 	}
+	if name == "Day11Solver" {
+		solver = &solvers.Day11Solver{Day: day, InputSource: inputSource}
+	}
 	if solver == nil {
 		return nil, errors.New("Unknown Solver")
 	}
