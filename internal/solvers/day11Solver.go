@@ -37,12 +37,9 @@ func (s Day11Solver) Part2() string {
 	//
 
 	// fmt.Printf("stones inital:\n%v\n", stones)
-	for i := 0; i < 75; i += 1 {
-		stones = changeStones(stones)
-		fmt.Printf("blink %v:\n%v\n", i, len(stones))
-	}
+	stoneNumber := getStonesLineage(stones, 75)
 
-	return fmt.Sprintf("%v", len(stones))
+	return fmt.Sprintf("%v", stoneNumber)
 }
 
 func inputToIntSlice(input string) []int {
@@ -81,4 +78,27 @@ func splitNumber(i int) (int,int) {
 	left, _ := strconv.Atoi(s[0:half])
 	right, _ := strconv.Atoi(s[half:l])
 	return left, right
+}
+
+// Let's track the linage of only one branch really deep
+// and sum up the stones in that branch before throwing
+// the branch away and starting the next branch
+// ---
+// This is easier on the memory but takes ages as well...
+func getStonesLineage(stones []int, generation int) int {
+	var counter int = 0
+	if generation == 0 {
+		return len(stones)
+	}
+	for _, stone := range stones {
+		if stone == 0 {
+			counter += getStonesLineage([]int{1}, generation -1)
+		} else if len(strconv.Itoa(stone)) % 2 == 0 {
+    		left, right := splitNumber(stone)
+			counter += getStonesLineage([]int{left, right}, generation -1)
+		} else {
+			counter += getStonesLineage([]int{stone * 2024}, generation -1)
+		}
+	}
+	return counter
 }
