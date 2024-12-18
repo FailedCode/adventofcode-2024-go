@@ -27,7 +27,22 @@ func (s Day11Solver) Part1() string {
 }
 
 func (s Day11Solver) Part2() string {
-	return fmt.Sprintf("todo: implement Part2")
+
+	input := utility.LoadInput(s.Day, s.InputSource)
+	stones := inputToIntSlice(input[0])
+
+	//
+	// Part 1 approach
+	// blink 43: signal: killed :()
+	//
+
+	// fmt.Printf("stones inital:\n%v\n", stones)
+	for i := 0; i < 75; i += 1 {
+		stones = changeStones(stones)
+		fmt.Printf("blink %v:\n%v\n", i, len(stones))
+	}
+
+	return fmt.Sprintf("%v", len(stones))
 }
 
 func inputToIntSlice(input string) []int {
