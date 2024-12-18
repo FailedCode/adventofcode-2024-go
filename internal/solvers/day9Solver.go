@@ -29,7 +29,6 @@ func (s Day9Solver) Part2() string {
 	defragmented := defragment_blockwise(decompressed)
 	checksum := calculateChecksum(defragmented)
 
-	//	6420913947251 too high
 	return fmt.Sprintf("%v", checksum)
 }
 
@@ -173,7 +172,7 @@ func defragment_blockwise(fs []int) []int {
 			emptyLength = emptyPosition - emptyStartPos
 
 			// is the empty space after the current file: try the next file
-			if emptyPosition + emptyLength > fileStartPos - fileLength {
+			if emptyStartPos + emptyLength -1 > fileStartPos - fileLength {
 				emptyPosition = 0
 				filePosition -= fileLength
 				fileLength = 0
