@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 	"strconv"
+	"time"
 	"internal/utility"
 )
 
@@ -36,8 +37,13 @@ func (s Day11Solver) Part2() string {
 	// blink 43: signal: killed :()
 	//
 
-	// fmt.Printf("stones inital:\n%v\n", stones)
-	stoneNumber := getStonesLineage(stones, 75)
+	var stoneStack []Stone
+	for _, n := range stones {
+		stoneStack = append(stoneStack, Stone{v: n, generation: 75})
+	}
+
+	// fmt.Printf("stones inital:\n%v\n", stoneStack)
+	stoneNumber := getStonesLineage(stoneStack, 10000)
 
 	return fmt.Sprintf("%v", stoneNumber)
 }
@@ -80,24 +86,45 @@ func splitNumber(i int) (int,int) {
 	return left, right
 }
 
+type Stone struct {
+	v int
+	generation int
+}
+
+
 // Let's track the linage of only one branch really deep
 // and sum up the stones in that branch before throwing
 // the branch away and starting the next branch
 // ---
 // This is easier on the memory but takes ages as well...
-func getStonesLineage(stones []int, generation int) int {
+func getStonesLineage(stones []Stone, progress_ms int64) int {
+	timer := time.Now()
+	var stone Stone
 	var counter int = 0
-	if generation == 0 {
-		return len(stones)
-	}
-	for _, stone := range stones {
-		if stone == 0 {
-			counter += getStonesLineage([]int{1}, generation -1)
-		} else if len(strconv.Itoa(stone)) % 2 == 0 {
-    		left, right := splitNumber(stone)
-			counter += getStonesLineage([]int{left, right}, generation -1)
-		} else {
-			counter += getStonesLineage([]int{stone * 2024}, generation -1)
+	for len(stones) > 0 {
+		stone, stones = pop(stones)
+		for true {
+			if progress_ms > 0 && time.Since(timer).Milliseconds() >= progress_ms {
+				fmt.Printf("stack size: %v\n", len(stones))
+				timer = time.Now()
+			}
+
+			if stone.generation == 0 {
+				counter += 1
+				break
+			}
+			if stone.v == 0 {
+				stone.v = 1
+				stone.generation -= 1
+			} else if len(strconv.Itoa(stone.v)) % 2 == 0 {
+	    		left, right := splitNumber(stone.v)
+				stones = append(stones, Stone{v: right, generation: stone.generation -1})
+	    		stone.v = left
+				stone.generation -= 1
+			} else {
+				stone.v *= 2024
+				stone.generation -= 1
+			}
 		}
 	}
 	return counter
