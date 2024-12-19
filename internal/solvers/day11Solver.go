@@ -43,7 +43,7 @@ func (s Day11Solver) Part2() string {
 	}
 
 	// fmt.Printf("stones inital:\n%v\n", stoneStack)
-	stoneNumber := getStonesLineage(stoneStack, 10000)
+	stoneNumber := getStonesLineage(stoneStack, 1000)
 
 	return fmt.Sprintf("%v", stoneNumber)
 }
@@ -97,15 +97,16 @@ type Stone struct {
 // the branch away and starting the next branch
 // ---
 // This is easier on the memory but takes ages as well...
-func getStonesLineage(stones []Stone, progress_ms int64) int {
+func getStonesLineage(stones []Stone, progress_ms int64) int64 {
+	startTime := time.Now()
 	timer := time.Now()
 	var stone Stone
-	var counter int = 0
+	var counter int64 = 0
 	for len(stones) > 0 {
 		stone, stones = pop(stones)
 		for true {
 			if progress_ms > 0 && time.Since(timer).Milliseconds() >= progress_ms {
-				fmt.Printf("stack size: %v\n", len(stones))
+				fmt.Printf("stack size: %v \tcounter: %v \tcalculating for: %v\n", len(stones), counter, time.Since(startTime))
 				timer = time.Now()
 			}
 
@@ -113,7 +114,24 @@ func getStonesLineage(stones []Stone, progress_ms int64) int {
 				counter += 1
 				break
 			}
+
 			if stone.v == 0 {
+
+				// optimize the next few steps
+				if stone.generation > 3 {
+					// make value 1
+					stone.generation -= 1
+					// make 2024
+					stone.generation -= 1
+					// split value
+					stones = append(stones, Stone{v: 24, generation: stone.generation -1})
+	    			stone.v = 20
+					stone.generation -= 1
+					// this is all deterministic from here, so you could probably cache the next
+					// X generations and skip all the computation
+					continue
+				}
+
 				stone.v = 1
 				stone.generation -= 1
 			} else if len(strconv.Itoa(stone.v)) % 2 == 0 {
@@ -126,6 +144,9 @@ func getStonesLineage(stones []Stone, progress_ms int64) int {
 				stone.generation -= 1
 			}
 		}
+	}
+	if progress_ms > 0 {
+		fmt.Printf("duration: %v\n", time.Since(startTime))
 	}
 	return counter
 }
