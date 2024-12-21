@@ -31,18 +31,7 @@ func (s Day14Solver) Part1() string {
 	}
 
 	input := utility.LoadInput(s.Day, s.InputSource)
-	r := regexp.MustCompile(`p=(\d+),(\d+)\sv=(-?\d+),(-?\d+)`)
-	var robots []Robot
-	for _, line := range input {
-		matches := r.FindAllStringSubmatch(line, -1)
-		for _, match := range matches {
-			px, _ := strconv.Atoi(match[1])
-			py, _ := strconv.Atoi(match[2])
-			vx, _ := strconv.Atoi(match[3])
-			vy, _ := strconv.Atoi(match[4])
-			robots = append(robots, Robot{px: px, py: py, vx: vx, vy: vy})
-		}
-	}
+	robots := inputToRobots(input)
 
 	// fmt.Printf("%v\n", robots[0])
 	for i := 0; i < 100; i += 1 {
@@ -56,7 +45,49 @@ func (s Day14Solver) Part1() string {
 }
 
 func (s Day14Solver) Part2() string {
-	return fmt.Sprintf("todo: implement Part2")
+
+	maxW := 101
+	maxH := 103
+
+	input := utility.LoadInput(s.Day, s.InputSource)
+	robots := inputToRobots(input)
+
+	boundingBoxSize := boundingBox(robots)
+	boundingBoxSizeLast := 0
+	boundingBoxSizeMin := boundingBoxSize
+	boundingBoxSizeMinTime := 0
+	i := 0
+	for true {
+		i += 1
+		moveRobots(robots, maxW, maxH)
+		boundingBoxSizeLast = boundingBoxSize
+		boundingBoxSize = boundingBox(robots)
+		if boundingBoxSizeLast != boundingBoxSize {
+			if boundingBoxSize < boundingBoxSizeMin {
+				boundingBoxSizeMin = boundingBoxSize
+				boundingBoxSizeMinTime = i
+			}
+			fmt.Printf("BoundingBox min(%v @ %v)\t%v\n", boundingBoxSizeMin, boundingBoxSizeMinTime, i)
+		}
+	}
+
+	return fmt.Sprintf("Smalles bounding box after %v", i)
+}
+
+func inputToRobots(input []string) []Robot {
+	r := regexp.MustCompile(`p=(\d+),(\d+)\sv=(-?\d+),(-?\d+)`)
+	var robots []Robot
+	for _, line := range input {
+		matches := r.FindAllStringSubmatch(line, -1)
+		for _, match := range matches {
+			px, _ := strconv.Atoi(match[1])
+			py, _ := strconv.Atoi(match[2])
+			vx, _ := strconv.Atoi(match[3])
+			vy, _ := strconv.Atoi(match[4])
+			robots = append(robots, Robot{px: px, py: py, vx: vx, vy: vy})
+		}
+	}
+	return robots
 }
 
 func moveRobots(robots []Robot, maxW int, maxH int) {
@@ -115,4 +146,27 @@ func (r Robot) IsInRect(minX int, minY int, maxX int, maxY int) bool {
 	if r.px > maxX {return false}
 	if r.py > maxY {return false}
 	return true
+}
+
+func boundingBox(robots []Robot) int {
+	minX := 99999
+	maxX := 0
+	minY := 99999
+	maxY := 0
+	for _, robot := range robots {
+		if robot.px < minX {
+			minX = robot.px
+		}
+		if robot.py < minY {
+			minY = robot.py
+		}
+		if robot.px > maxX {
+			maxX = robot.px
+		}
+		if robot.py > maxY {
+			maxY = robot.py
+		}
+	}
+	// fmt.Printf("boundingBox: (%v, %v), (%v, %v) \n", minX, minY, maxX, maxY)
+	return (maxX - minX) * (maxY - minY)
 }
