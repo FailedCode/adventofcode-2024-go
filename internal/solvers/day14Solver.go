@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strconv"
+	"time"
 	"internal/utility"
 )
 
@@ -52,23 +53,13 @@ func (s Day14Solver) Part2() string {
 	input := utility.LoadInput(s.Day, s.InputSource)
 	robots := inputToRobots(input)
 
-	boundingBoxSize := boundingBox(robots)
-	boundingBoxSizeLast := 0
-	boundingBoxSizeMin := boundingBoxSize
-	boundingBoxSizeMinTime := 0
 	i := 0
 	for true {
 		i += 1
 		moveRobots(robots, maxW, maxH)
-		boundingBoxSizeLast = boundingBoxSize
-		boundingBoxSize = boundingBox(robots)
-		if boundingBoxSizeLast != boundingBoxSize {
-			if boundingBoxSize < boundingBoxSizeMin {
-				boundingBoxSizeMin = boundingBoxSize
-				boundingBoxSizeMinTime = i
-			}
-			fmt.Printf("BoundingBox min(%v @ %v)\t%v\n", boundingBoxSizeMin, boundingBoxSizeMinTime, i)
-		}
+		displayRobots(robots)
+		fmt.Printf("seconds: %v", i)
+		time.Sleep(time.Second)
 	}
 
 	return fmt.Sprintf("Smalles bounding box after %v", i)
@@ -169,4 +160,22 @@ func boundingBox(robots []Robot) int {
 	}
 	// fmt.Printf("boundingBox: (%v, %v), (%v, %v) \n", minX, minY, maxX, maxY)
 	return (maxX - minX) * (maxY - minY)
+}
+
+func displayRobots(robots []Robot) {
+	display := [103][101]int{}
+	for _, robot := range robots {
+		display[robot.py][robot.px] += 1
+	}
+	for _, row := range display {
+		for _, value := range row {
+			if value > 0 {
+				fmt.Printf("%v", value)
+			} else {
+				fmt.Printf(" ")
+			}
+		}
+		fmt.Println()
+	}
+
 }
