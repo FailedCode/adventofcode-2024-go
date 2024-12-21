@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strconv"
-	"time"
+	// "time"
 	"internal/utility"
 )
 
@@ -57,12 +57,13 @@ func (s Day14Solver) Part2() string {
 	for true {
 		i += 1
 		moveRobots(robots, maxW, maxH)
-		displayRobots(robots)
-		fmt.Printf("seconds: %v", i)
-		time.Sleep(time.Second)
+		if robotsInARow(robots) {
+			break;
+		}
 	}
+	displayRobots(robots)
 
-	return fmt.Sprintf("Smalles bounding box after %v", i)
+	return fmt.Sprintf("%v", i)
 }
 
 func inputToRobots(input []string) []Robot {
@@ -160,6 +161,28 @@ func boundingBox(robots []Robot) int {
 	}
 	// fmt.Printf("boundingBox: (%v, %v), (%v, %v) \n", minX, minY, maxX, maxY)
 	return (maxX - minX) * (maxY - minY)
+}
+
+func robotsInARow(robots []Robot) bool {
+	field := [103][101]int{}
+	for _, robot := range robots {
+		field[robot.py][robot.px] += 1
+	}
+	adjecend := 0
+	for _, row := range field {
+		for _, value := range row {
+			if value > 0 {
+				adjecend += 1
+			} else {
+				adjecend = 0
+			}
+			if adjecend > 7 {
+				return true
+			}
+		}
+		adjecend = 0
+	}
+	return false
 }
 
 func displayRobots(robots []Robot) {
